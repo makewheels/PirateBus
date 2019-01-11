@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>GetBusPositionServlet</display-name>
+    <servlet-name>GetBusPositionServlet</servlet-name>
+    <servlet-class>servlet.GetBusPositionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetBusPositionServlet</servlet-name>
+    <url-pattern>/getBusPosition</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GetStationListServlet</display-name>
+    <servlet-name>GetStationListServlet</servlet-name>
+    <servlet-class>servlet.GetStationListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetStationListServlet</servlet-name>
+    <url-pattern>/getStationList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SearchBusServlet</display-name>
+    <servlet-name>SearchBusServlet</servlet-name>
+    <servlet-class>servlet.SearchBusServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SearchBusServlet</servlet-name>
+    <url-pattern>/searchBus</url-pattern>
+  </servlet-mapping>
+</web-app>

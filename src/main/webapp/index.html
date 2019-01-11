@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>盗版秘书：就是屌！</title>
+		<script src="https://cdn.bootcss.com/mui/3.7.1/js/mui.min.js"></script>
+		<link href="https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css" rel="stylesheet" />
+
+		<script src="js/common.js"></script>
+	</head>
+
+	<body>
+		<style>
+			*{
+				font-size: 20px;
+			}
+		</style>
+		<h2 align="center">还有SEI？</h2>
+		<!--折叠面板-->
+		<ul class="mui-table-view">
+			<!--我的收藏-->
+			<li id="accordion_favourite" class="mui-table-view-cell mui-collapse mui-active">
+				<a style="background-color: cyan;font-weight: bold;" class="mui-navigate-right">我收藏的 Bus</a>
+				<div class="mui-collapse-content">
+					<!--收藏Bus列表-->
+					<ul id="list_favouriteBus" style="margin-top: 0;" class="mui-table-view">
+						<li class="mui-table-view-cell busButton" busName="50">50 路</li>
+						<li class="mui-table-view-cell busButton" busName="806">806 路</li>
+						<li class="mui-table-view-cell busButton" busName="22">11 路</li>
+						<li class="mui-table-view-cell busButton" busName="22">22 路</li>
+						<li class="mui-table-view-cell busButton" busName="27">27 路</li>
+						<li class="mui-table-view-cell busButton" busName="801">801 路</li>
+					</ul>
+				</div>
+			</li>
+			<!--搜索Bus-->
+			<li class="mui-table-view-cell mui-collapse mui-active">
+				<a style="background-color: cyan;font-weight: bold;" class="mui-navigate-right">搜索 Bus</a>
+				<div class="mui-collapse-content">
+					<div class="mui-input-row" style="margin-bottom: 10px;">
+						<label>公交名：</label>
+						<input id="input_searchBus" type="number" style="background-color: #eee;padding-left: 15px;font-weight: bold;"
+						 class="mui-input-numbox" placeholder="搜公交">
+					</div>
+					<!--搜索结果-->
+					<ul id="list_searchResult" style="margin-top: 0;" class="mui-table-view">
+					</ul>
+				</div>
+			</li>
+		</ul>
+		<script type="text/javascript">
+			mui.init();
+			mui.ready(function() {
+				//上来先加载我收藏的公交
+				var favouriteBusList = document.getElementById("list_favouriteBus");
+				//favouriteBusList.innerHTML = favouriteBusList.innerHTML +
+				//	"<li class='mui-table-view-cell busButton' busName='2'>2路汽车</li>";
+				//我的收藏的公交的按钮
+				var busButtons = document.getElementsByClassName("busButton");
+				//逐个添加监听,点击跳转
+				for (var i = 0; i < busButtons.length; i++) {
+					busButtons[i].addEventListener("tap", function() {
+						mui.openWindow({
+							url: baseUrl + "/busDetail.html?busName=" + this.getAttribute("busName")
+						});
+					});
+				}
+				//搜索框聚焦时，折叠收藏的公交列表
+				var input_searchBus = document.getElementById("input_searchBus");
+				input_searchBus.addEventListener("touchstart", function() {
+					document.getElementById("accordion_favourite").classList.remove("mui-active");
+					setTimeout(function() {
+						input_searchBus.focus();
+					}, 80);
+				});
+				//输入时自动搜索
+				document.getElementById("input_searchBus").oninput = function() {
+					mui.get(baseUrl + "/searchBus", {
+						keyword: this.value
+					}, function(data) {
+						var html = "";
+						for (var i = 0; i < data.length; i++) {
+							var busName = data[i].busName;
+							var showName = data[i].showName;
+							html += "<li style='color:#185491;font-weight:bold;padding-left:130px' class='mui-table-view-cell busButton' busName='" + busName + "'>" +
+								showName + "</li>";
+						}
+						var list_searchResult = document.getElementById("list_searchResult")
+						list_searchResult.innerHTML = html;
+						//给搜索结果按钮添加监听
+						var busButtons = list_searchResult.children;
+						for (var i = 0; i < busButtons.length; i++) {
+							busButtons[i].addEventListener("tap", function() {
+								mui.openWindow({
+									url: baseUrl + "/busDetail.html?busName=" + this.getAttribute("busName")
+								});
+							});
+						}
+					}, "json");
+				};
+			});
+		</script>
+	</body>
+</html>

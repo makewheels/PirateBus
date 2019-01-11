@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>公交详情</title>
+		<script src="https://cdn.bootcss.com/mui/3.7.1/js/mui.min.js"></script>
+		<link href="https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css" rel="stylesheet" />
+
+		<script src="js/common.js"></script>
+	</head>
+
+	<body align="center">
+		<div style="margin-top: 20px;margin-bottom: 10px;">
+			<button id="btn_reverse" style="width: 120px;margin-right: 15px;" data-loading-icon="mui-spinner mui-spinner-custom"
+			 type="button" class="mui-btn mui-btn-primary mui-btn-outlined myBtn">换&nbsp;&nbsp;&nbsp;向</button>
+			<button id="btn_timeTable" style="width: 100px;" data-loading-icon="mui-spinner mui-spinner-custom" type="button"
+			 class="mui-btn mui-btn-success mui-btn-outlined myBtn">时&nbsp;刻&nbsp;表</button>
+		</div>
+		<style>
+			#table_stationList tr {
+				height:35px;
+			}
+			.myBtn{
+				font-size:21px;
+				padding-top:0; 
+				height:36px;
+				line-height: 36px;
+			}
+		</style>
+		<table id="table_stationList" border="0" width="100%" align="center" style="font-size: larger;">
+			<thead>
+				<tr>
+					<th width="20%">位置</th>
+					<th width="80%">站点</th>
+				</tr>
+			</thead>
+			<tbody id="stationList">
+			</tbody>
+		</table>
+		<script type="text/javascript">
+			//方向
+			var direction = 0;
+			var busName = "";
+
+			mui.init();
+			mui.ready(function() {
+				var url = window.location.href;
+				var parameter = "busName";
+				busName = url.substring(url.lastIndexOf(parameter + "=") + parameter.length + 1);
+				document.title = document.title + "：" + busName;
+				loadStationList();
+				addListener();
+			});
+
+			//加载站点列表
+			function loadStationList() {
+				mui.get(baseUrl + "/getStationList", {
+					busName: busName,
+					direction: direction
+				}, function(data) {
+					var stationList = document.getElementById("stationList");
+					var html = "";
+					for (var i = 0; i < data.length; i++) {
+						html += "<tr><td></td><td>" + data[i] + "</td></tr>";
+						stationList.innerHTML = html;
+					}
+					loadBusLocation();
+				}, "json");
+			}
+
+			//加载公交位置
+			function loadBusLocation() {
+				mui.get(baseUrl + "/getBusPosition", {
+					busName: busName,
+					direction: direction
+				}, function(data) {
+					if (data.length == 0) {
+						mui.toast("现在路上没车哦，大兄弟");
+					} else {
+						var stationList = document.getElementById("stationList").children;
+						for (var i = 0; i < data.length; i++) {
+							var index = data[i];
+							var tr = stationList[index].children;
+							var td1 = tr[0];
+							var td2 = tr[1];
+							td1.style.backgroundColor = "#9AFF9A";
+							td2.style.backgroundColor = "#9AFF9A";
+							td1.innerHTML = "<span class='mui-icon mui-icon-forward'></span>";
+						}
+					}
+				}, "json");
+			};
+
+			//添加监听
+			function addListener() {
+				document.getElementById("btn_reverse").addEventListener("tap", function() {
+					if (direction == 0) {
+						direction = 1;
+					} else if (direction == 1) {
+						direction = 0;
+					}
+					loadStationList();
+				});
+				document.getElementById("btn_timeTable").addEventListener("tap", function() {
+
+				});
+			}
+		</script>
+	</body>
+</html>
