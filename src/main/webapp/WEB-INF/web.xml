@@ -35,4 +35,14 @@
     <servlet-name>SearchBusServlet</servlet-name>
     <url-pattern>/searchBus</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GetTimeTableServlet</display-name>
+    <servlet-name>GetTimeTableServlet</servlet-name>
+    <servlet-class>servlet.GetTimeTableServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetTimeTableServlet</servlet-name>
+    <url-pattern>/getTimeTable</url-pattern>
+  </servlet-mapping>
 </web-app>
