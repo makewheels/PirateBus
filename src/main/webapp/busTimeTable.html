@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>发车时刻表</title>
+		<script src="https://cdn.bootcss.com/mui/3.7.1/js/mui.min.js"></script>
+		<link href="https://cdn.bootcss.com/mui/3.7.1/css/mui.min.css" rel="stylesheet" />
+
+		<script src="js/common.js"></script>
+	</head>
+
+	<body align="center">
+		<h2 id="topic" style="margin-top: 10px;margin-bottom: 10px;"></h2>
+		<div style="margin-top: 20px;margin-bottom: 10px;">
+			<button id="btn_reverse" style="width: 120px;margin-right: 15px;" data-loading-icon="mui-spinner mui-spinner-custom"
+			 type="button" class="mui-btn mui-btn-primary mui-btn-outlined myBtn">换&nbsp;&nbsp;&nbsp;向</button>
+		</div>
+		<ul id="list_timeTable" class="mui-table-view">
+		</ul>
+		<style>
+			*{
+				font-size: 20px;
+			}
+			#table_stationList tr {
+				height:35px;
+			}
+			.myBtn{
+				font-size:21px;
+				padding-top:0; 
+				height:36px;
+				line-height: 36px;
+			}
+		</style>
+		<script type="text/javascript">
+			//方向
+			var busName = "";
+			var direction = 0;
+
+			mui.init();
+			mui.ready(function() {
+				var url = window.location.href;
+				busName = getParameter("busName");
+				direction = getParameter("direction");
+				loadTimeTable();
+				document.getElementById("btn_reverse").addEventListener("tap", function() {
+					if (direction == 0) {
+						direction = 1;
+					} else if (direction == 1) {
+						direction = 0;
+					}
+					loadTimeTable();
+				});
+			});
+
+			//获取本窗口url中的参数
+			function getParameter(key) {
+				var reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)', 'i');
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) {
+					return unescape(r[2]);
+				}
+				return null;
+			}
+
+			//加载发车时刻表
+			function loadTimeTable() {
+				mui.get(baseUrl + "/getTimeTable", {
+					busName: busName,
+					direction: direction
+				}, function(data) {
+					if (data == null || data.msg == "ok") {
+						document.getElementById("topic").innerHTML = data.topic;
+						var html = "";
+						var topic = data.topic;
+						var timeList = data.timeList;
+						for (var i = 0; i < timeList.length; i++) {
+							html += "<li class='mui-table-view-cell'>" + timeList[i] + "</li>";
+						}
+						document.getElementById("list_timeTable").innerHTML = html;
+					} else {
+						mui.alert("该车不存在");
+					}
+				}, "json");
+			}
+		</script>
+	</body>
+</html>

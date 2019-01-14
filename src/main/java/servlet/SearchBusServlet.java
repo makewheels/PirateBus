@@ -14,6 +14,12 @@ import com.alibaba.fastjson.JSON;
 import bean.search.BusSearchResult;
 import bus.BusHelper;
 
+/**
+ * 搜索公交
+ * 
+ * @author Administrator
+ *
+ */
 public class SearchBusServlet extends HttpServlet {
 	private static final long serialVersionUID = -8305691947876202609L;
 

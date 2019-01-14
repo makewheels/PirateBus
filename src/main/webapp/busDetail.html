@@ -40,8 +40,8 @@
 		</table>
 		<script type="text/javascript">
 			//方向
-			var direction = 0;
 			var busName = "";
+			var direction = 0;
 
 			mui.init();
 			mui.ready(function() {
@@ -103,7 +103,9 @@
 					loadStationList();
 				});
 				document.getElementById("btn_timeTable").addEventListener("tap", function() {
-
+					mui.openWindow({
+						url: baseUrl + "/busTimeTable.html?busName=" + busName + "&direction=" + direction
+					});
 				});
 			}
 		</script>
